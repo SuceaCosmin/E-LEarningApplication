@@ -1,0 +1,39 @@
+﻿@model IEnumerable<E_LearningApplication_Final.Test>
+     
+@{
+    ViewBag.Title = "StudentsTestResult";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Test Results</h2>
+
+<table id="courses" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+
+
+            <th>Student Email</th>
+            <th>Total Points</th>
+            <th>Date</th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            foreach (var student in Model)
+            {
+                <tr>
+                    <td>@Html.ActionLink(@student.User.Email, "Details", "Student", new { id = student.Student_ID }, null)</td>
+                    <td>@student.Result</td>
+                    <td>@student.TestDate</td>
+
+
+                </tr>
+            }
+        }
+
+
+    </tbody>
+</table>

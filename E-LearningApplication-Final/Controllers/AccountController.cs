@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using E_LearningApplication_Final.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.IO;
 
 namespace E_LearningApplication_Final.Controllers
 {
@@ -147,14 +149,61 @@ namespace E_LearningApplication_Final.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+      
+        public async Task<ActionResult> Register([Bind(Exclude = "UserPhoto, CV")]RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                byte[] imageData = null;
+                if (Request.Files.Count > 0)
+                {
+                    HttpPostedFileBase poImgFile = Request.Files["UserPhoto"];
+
+                    using (var binary = new BinaryReader(poImgFile.InputStream))
+                    {
+                        imageData = binary.ReadBytes(poImgFile.ContentLength);
+                    }
+                }
+
+                byte[] CvPdf = null;
+                if (Request.Files.Count > 1)
+                {
+                    HttpPostedFileBase cvPdfFile = Request.Files["CV"];
+                    using (var binary = new BinaryReader(cvPdfFile.InputStream))
+                    {
+                        CvPdf = binary.ReadBytes(cvPdfFile.ContentLength);
+                    }
+
+                }
+
+
+                var user = new Models.User { UserName = model.Email, Email = model.Email };
+                user.UserPhoto = imageData;
+                user.CV = CvPdf;
+                user.FullName = model.FullName;
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+
+                    ////Temp Code
+                    if(User.IsInRole("Admin"))
+                    {
+                        var roleStore = new RoleStore<IdentityRole>(new ApplicationDbContext());
+                        var roleManager = new RoleManager<IdentityRole>(roleStore);
+                        await roleManager.CreateAsync(new IdentityRole("Professor"));
+                        await UserManager.AddToRoleAsync(user.Id, "Professor");
+                        return RedirectToAction("Index", "Professor");
+                    }
+                
+                    else
+                    {
+                        var roleStore = new RoleStore<IdentityRole>(new ApplicationDbContext());
+                        var roleManager = new RoleManager<IdentityRole>(roleStore);
+                        await roleManager.CreateAsync(new IdentityRole("Student"));
+                        await UserManager.AddToRoleAsync(user.Id, "Student");
+                    }
+                  
+
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     
                     // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
@@ -367,7 +416,7 @@ namespace E_LearningApplication_Final.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new Models.User { UserName = model.Email, Email = model.Email };
                 var result = await UserManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

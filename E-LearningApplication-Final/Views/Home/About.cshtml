@@ -1,7 +1,103 @@
-﻿@{
+﻿@Styles.Render("~/Content/About.css")
+@{
     ViewBag.Title = "About";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<p>Use this area to provide additional information.</p>
+
+<section class="team-section py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="head-box text-center mb-5 col-md-12">
+                <br />
+                <br />
+                <br />
+
+                <div class="head-box text-center  mb-5 col-md-12">
+                    <div class="form-horizontal ">
+                        <br />
+                        <br />
+                        <br />
+                        <h2 style="font-weight: bolder; font-style: normal; font-variant: normal; color: #000000">Short Presentation</h2>
+                        <hr />
+                        <br />
+                        <p>This web application named Medical Academy was developed to serve as a e-learning platform for prospective students or students enrolled in a faculty of medicine. Thus, on this platform they can find materials and tests to evaluate their accumulated knowledge.
+At the same time, teachers can use this platforme to analye students’ interest in the courses they have published, and also to provide students with the opportunity to test their knowledge before the exams.
+</p>
+
+
+
+                    </div>
+
+                </div>
+
+
+           
+
+
+            <div class="head-box text-center  mb-5 col-md-12">
+                <div class="form-horizontal ">
+                    <br />
+                    <br />
+                    <br />
+                    <h2 style="font-weight: bolder; font-style: normal; font-variant: normal; color: #000000">Location</h2>
+                    <hr />
+                    <br />
+                    <div id="map_populate" style="width:100%; height:500px; border: 5px solid #5E5454;">
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@section scripts{
+<script>
+
+    $(function () {
+    var mapcode;
+    var diag;
+
+    function initialize() {
+        mapcode = new google.maps.Geocoder();
+        var lnt = new google.maps.LatLng(44.330, 23.794);
+        var myLatLng = { lat: 44.330179, lng: 23.794881 };
+
+        var diagChoice = {
+            zoom: 9,
+            center: lnt,
+            diagId: google.maps.MapTypeId.ROADMAP
+        }
+        diag = new google.maps.Map(document.getElementById('map_populate'), diagChoice);
+        var marker = new google.maps.Marker({
+            position: myLatLng,
+            map: diag,
+            title: 'Hello World!'
+        });
+    }
+
+
+    function getmap() {
+        var completeaddress = document.getElementById('txt_location').value;
+        mapcode.geocode({ 'address': completeaddress }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+                diag.setCenter(results[0].geometry.location);
+                var hint = new google.maps.Marker({
+                    diag: diag,
+                    position: results[0].geometry.location
+                });
+            } else {
+                alert('Location Not Tracked. ' + status);
+            }
+        });
+    }
+    google.maps.event.addDomListener(window, 'load', initialize);
+    });
+
+    </script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFr6yqXspIFWC2UZHIbND8NLaQFtJa6gw" type="text/javascript"></script>
+}
+

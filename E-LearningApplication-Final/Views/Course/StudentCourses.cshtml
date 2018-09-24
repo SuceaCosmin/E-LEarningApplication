@@ -1,0 +1,82 @@
+﻿@model IEnumerable<E_LearningApplication_Final.Dtos.CourseDto>
+
+@{
+    ViewBag.Title = "StudentCourses";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2> MyCourses  </h2>
+
+
+<table id="courses" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+
+
+            <th>Course Name</th>
+            
+            <th>Unsubscribe</th>
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            foreach (var course in Model)
+            {
+                <tr>
+                    <td>@Html.ActionLink(@course.Name, "Details", "Course", new { id = course.Id }, null)</td>
+                   
+                   
+
+
+                    <td> @Html.ActionLink("UnSubscribe", "UnSubscribe", "Course", new { id = course.Id }, null)</td>
+
+
+                </tr>
+            }
+        }
+
+        
+    </tbody>
+</table>
+
+@section scripts
+{
+    @*<script>
+            $(document).ready(function () {
+                var table = $("#courses").DataTable({
+                    ajax: {
+                        url: "/api/course",
+                        dataSrc: ""
+                    },
+                    columns: [
+
+                        {
+                            data: "name",
+                            render: function (data, type, courses) {
+                                return "<a href='/course/details/" + courses.id + "'>" + courses.name + "</a>";
+                            }
+                        },
+                         {
+                             data: "author.email",
+
+                         },
+                         {
+                             data: "rate",
+
+                         },
+
+
+
+
+
+
+                    ]
+                });
+
+            });
+        </script>*@
+}
+

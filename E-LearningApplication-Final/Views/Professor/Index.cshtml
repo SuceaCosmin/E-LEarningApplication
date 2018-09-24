@@ -1,0 +1,89 @@
+﻿@model IEnumerable<E_LearningApplication_Final.Dtos.ProfessorDto > 
+
+@{
+    ViewBag.Title = "Professor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Professors</h2>
+
+<p>
+    @*@Html.ActionLink("New Professor", "NewProfessor", "Professor", null, new { @class = "btn btn-primary" })*@
+    @Html.ActionLink("New Professor", "Register", "Account", routeValues: null, htmlAttributes: new { @class = "btn btn-primary" })
+</p>
+
+
+    <table id="professors" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+
+                <th>Professor</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+         
+
+        </tbody>
+
+    </table>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function ()
+        {
+            var table = $("#professors").DataTable({
+                ajax: {
+                    url: "/api/professor",
+                    dataSrc: ""
+                },
+                columns: [
+
+                    {
+                        data: "email",
+                        render: function(data, type, profesorDto)
+                        {
+                            return "<a href='/professor/details/" + profesorDto.id + "'>" + profesorDto.email + "</a>";
+                        }
+                    },
+                        {
+                            data: "name",
+                            render: function (data, type, profesorDto) {
+                                return "<a href='/professor/professorform/" + profesorDto.Id + "'> Edit </a>";
+                            }
+                        },
+
+
+                        {
+                            data: "id",
+                            render: function (data) {
+                                return "<button class='btn-link js-delete' data-professor-id=" + data + ">Delete</button>";
+                            }
+                        }
+                ]
+            });
+
+            $("#professors").on("click", ".js-delete", function ()
+            {
+                var button = $(this);
+                bootbox.confirm("Are you sure that you want to delete this student?", function (result) {
+                    if(result)
+                    {
+                        $.ajax({
+                            url: "/api/professor/" + button.attr("data-professor-id"),
+                            method: "DELETE",
+                            success: function () {
+                                table.row(button.parents("tr")).remove().draw();
+
+                            }
+                        })
+                    }
+                })
+
+            });
+        });
+</script>
+    }

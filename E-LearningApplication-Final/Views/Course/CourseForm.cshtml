@@ -1,0 +1,55 @@
+﻿@model E_LearningApplication_Final.ViewModels.CourseFormViewModel
+
+@{
+    ViewBag.Title = "NewCourse";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>New Course</h2>
+
+
+@using (Html.BeginForm("Save", "Course", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Course.Name)
+            @Html.TextBoxFor(m => m.Course.Name, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Course.Name)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Course.Description)
+            @Html.TextBoxFor(m => m.Course.Description, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Course.Description)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Course.Content)
+            <input type="file" name="Content" id="pdf" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.Course.CoverPohoto)
+            <input type="file" name="CoverPhoto" id="photo" class="form-control" />
+        </div>
+
+        <div class="form-group">
+
+            @Html.HiddenFor(m => m.Course.Id)
+            @Html.HiddenFor(m => m.Course.Content)
+            @Html.HiddenFor(m => m.Course.CoverPohoto)
+            @Html.AntiForgeryToken()
+        </div>
+        <button type="submit" class="success btn btn-success" value="@Model.Course.Author_Id"> Save</button>
+
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(".success").click(function () {
+            toastr.success('Course added!', 'Success Alert', { timeOut: 5000 })
+        });
+    </script>
+}

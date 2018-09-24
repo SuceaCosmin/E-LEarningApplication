@@ -1,0 +1,120 @@
+﻿
+
+@model E_LearningApplication_Final.ViewModels.CourseFormViewModel
+@Styles.Render("~/Content/Statistics.css")
+@Styles.Render("~/Content/SingleCourse.css")
+
+@{
+    ViewBag.Title = "SingleCourse";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="header">
+    <div class="container">
+        <div class="row">
+            <div class="col-6">
+                <h1 id="title" style="color: #3db1eb">@Model.Course.Name </h1>
+                <hr />
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <br />
+
+        <div class="col-6">
+            <font size="10" style="color: black"> @Model.Course.Description</font>
+        </div>
+        <br />
+
+        <div class="row">
+            <div class="col-md-4">
+                @{
+
+                    var base64 = Convert.ToBase64String(Model.Course.CoverPohoto);
+                    var imgsrc = string.Format("data:image/jpg;base64,{0}", base64);
+                }
+                <img src="@imgsrc" class="img-fluid"  height="300" width="300" />
+
+            </div>
+            <div class="col-md-4 ">
+
+
+                @Html.ActionLink("Download Course", "DownloadCourse", new { id = @Model.Course.Id }, htmlAttributes: new { @class = "btn btn-link" })
+                </div>
+                <br />
+                <br />
+              
+    <div class="col-md-4">
+                    @Html.ActionLink("Add Questions", "AddQuestions", "Course", new { id = Model.Course.Id }, new { @class = "btn btn-primary" })
+                
+            </div>
+
+                <br />
+                <br />
+             
+
+
+
+            
+        </div>
+
+        <div class="col-md-10">
+            <hr />
+            <br />
+            <br />
+            <br />
+        </div>
+
+
+
+        <div class='ui'>
+
+            <div class='ui_box'>
+                <div class='ui_box__inner'>
+                    <h2>
+                        Rate of Test Past
+                    </h2>
+
+                    <div class='stat'>
+                        <span>@Model.RateTestPast %</span>
+                    </div>
+                    <div class='progress'>
+                        <div class='progress_bar'></div>
+                    </div>
+                    <p> For more details, take a closer look.</p>
+                </div>
+                <div class='drop'>
+                    @Html.ActionLink("Take a closer look", "StudentsTestResult", "Course", new { id = Model.Course.Id }, new { @class = "btn btn-primary" })
+                    <div class='arrow'></div>
+
+                </div>
+
+            </div>
+
+            <div class='ui_box'>
+                <div class='ui_box__inner'>
+                    <h2>
+                        Number of Subscribed Students
+                    </h2>
+
+                    <div class='stat'>
+                        <span>@Model.NrOfRegisteredStudents </span>
+                    </div>
+
+                    <p> For more details, take a closer look.</p>
+                </div>
+                <div class='drop'>
+                    @Html.ActionLink("Take a closer look", "SubscribedStudents", "Course", new { id = Model.Course.Id }, new { @class = "btn btn-primary" })
+                    <div class='arrow'></div>
+                </div>
+            </div>
+        </div>
+        }
+
+
+
+
+
+    </div>

@@ -1,0 +1,82 @@
+﻿@model IEnumerable<E_LearningApplication_Final.Cours>
+
+@{
+    ViewBag.Title = "Course";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>List Of Courses     </h2>
+<p>
+    @{
+        if (!User.IsInRole("Professor") && !User.IsInRole("Admin") && User.Identity.IsAuthenticated)
+        {
+            @Html.ActionLink("My Courses", "StudentCourses", "Course", null, new { @class = "btn btn-primary" })
+            @Html.ActionLink("Tests Results", "TestsResultsStudent", "Course", null, new { @class = "btn btn-primary" })
+        }
+        if (User.IsInRole("Professor"))
+        {
+            @Html.ActionLink("My Courses", "ProfessorCourses", "Course", null, new { @class = "btn btn-primary" })
+        }
+    }
+
+</p>
+
+
+<table id="courses" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+
+
+            <th>Course Name</th>
+            <th>Author</th>
+            
+
+
+        </tr>
+    </thead>
+    <tbody>
+
+
+
+    </tbody>
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var table = $("#courses").DataTable({
+                ajax: {
+                    url: "/api/course",
+                    dataSrc: ""
+                },
+                columns: [
+
+                    {
+                        data: "name",
+                        render: function (data, type, courses) {
+                            return "<a href='/course/details/" + courses.id + "'>" + courses.name + "</a>";
+                        }
+                    },
+                     {
+                         data: "author_Id",
+
+                     }
+                    
+
+
+
+
+
+
+
+
+
+                ]
+            });
+
+        });
+    </script>
+}
+
